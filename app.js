@@ -14,7 +14,7 @@ const dcCmd = 'docker-compose -f /home/eshop-kratomia/docker-compose.yml --env-f
 
 const commands = [
     'docker pull michalvarys/kratomia:latest',
-    `${dcCmd} down`,
+    // `${dcCmd} down`,
     `${dcCmd} up --force-recreate app`
 ]
 
@@ -42,6 +42,7 @@ async function releaseNewVersion(commands) {
 app.get('/auto-release', async (req, res) => {
     try {
         await releaseNewVersion(commands);
+        res.status(200)
         res.send({ success: true })
     } catch (error) {
         res.status(500)
