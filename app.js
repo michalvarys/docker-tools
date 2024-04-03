@@ -10,7 +10,7 @@ app.use(bodyParser.json())
 const githubEvents = []
 // const utils = require('util')
 const exec = require('child_process').exec;
-const dcCmd = 'docker-compose -f /app/eshop-kratomia/docker-compose.yml --env-file /app/eshop-kratomia/.env'
+const dcCmd = 'docker-compose -f /home/eshop-kratomia/docker-compose.yml --env-file /home/eshop-kratomia/.env'
 
 const commands = [
     'docker pull michalvarys/kratomia:latest',
@@ -44,8 +44,8 @@ app.get('/auto-release', async (req, res) => {
         await releaseNewVersion(commands);
         res.send({ success: true })
     } catch (error) {
-        res.status(500).
-            res.send({ success: false, error })
+        res.status(500)
+        res.send({ success: false, error })
     }
 })
 
