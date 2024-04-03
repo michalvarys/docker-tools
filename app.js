@@ -16,7 +16,7 @@ const commands = [
     'docker pull michalvarys/kratomia:latest',
     'docker pull michalvarys/varyshop:latest',
     // `${dcCmd} down`,
-    `${dcCmd} up --force-recreate app`
+    `${dcCmd} up --force-recreate -d app`
 ]
 
 const runCommand = async (cmd, cb) => new Promise((resolve, reject) => {
