@@ -8,14 +8,14 @@ const PORT = 8001
 app.use(bodyParser.json())
 
 const githubEvents = []
-const utils = require('util')
+// const utils = require('util')
 const exec = require('child_process').exec;
+const dcCmd = 'docker-compose -f /app/eshop-kratomia/docker-compose.yml --env-file /app/eshop-kratomia/.env'
 
 const commands = [
     'docker pull michalvarys/kratomia:latest',
-    'cd /home/eshop-kratomia',
-    'docker-compose down',
-    'docker-compose up -d --force-recreate app'
+    `${dcCmd} down`,
+    `${dcCmd} up --force-recreate app`
 ]
 
 const runCommand = async (cmd, cb) => new Promise((resolve, reject) => {
@@ -29,7 +29,7 @@ const runCommand = async (cmd, cb) => new Promise((resolve, reject) => {
     })
 })
 
-async function releaseNewVersion() {
+async function releaseNewVersion(commands) {
     console.log(`Initiating release`)
     for (const cmd of commands) {
         console.log(`running command ${cmd}`)
@@ -39,13 +39,23 @@ async function releaseNewVersion() {
     console.log(`release finished`)
 }
 
-app.get('/auto-release', async(req,res)=>{
-    try{
-        await releaseNewVersion();
-        res.send({ success: true, })
-    }catch(error){
+app.get('/auto-release', async (req, res) => {
+    try {
+        await releaseNewVersion(commands);
+        res.send({ success: true })
+    } catch (error) {
         res.status(500).
-        res.send({ success: false,error })
+            res.send({ success: false, error })
+    }
+})
+
+app.post('/auto-release', async (req, res) => {
+    try {
+        await releaseNewVersion(req.body.commands);
+        res.send({ success: true })
+    } catch (error) {
+        res.status(500).
+            res.send({ success: false, error })
     }
 })
 
@@ -53,7 +63,7 @@ app.post("/docker-status", async (req, res) => {
     console.log(req.body) // Call your action on the request here
     const { callback_url } = req.body
     // docker image is ready lets start releasing
-    releaseNewVersion()
+    releaseNewVersion(commands)
     // try {
     //     const request = await axios.post(callback_url, {
     //         state: "success",
