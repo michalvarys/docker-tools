@@ -14,6 +14,7 @@ const dcCmd = 'docker-compose -f /home/eshop-kratomia/docker-compose.yml --env-f
 
 const commands = [
     'docker pull michalvarys/kratomia:latest',
+    'docker pull michalvarys/varyshop:latest',
     // `${dcCmd} down`,
     `${dcCmd} up --force-recreate app`
 ]
